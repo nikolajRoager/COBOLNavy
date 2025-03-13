@@ -1,11 +1,6 @@
 Example of how the data in ALLIEDSHIPS, At the top I have written the variable name and the format, and below there is an example of the data
 The data is from the wonderful website: Naval-history.net: https://www.naval-history.net/xDKWW2-4101-26RNHome.htm
 
-
- 
-
-Cruisers repairing administered by 10th CS - heavy cruisers AUSTRALIA (Capt R R Stewart) at Liverpool docked to comp repairs 7 Jan, SUFFOLK (Capt E C Thornton DSC) at Greenock refitting to comp 31 Jan, SUSSEX (Capt C L Bate DSO Rtd) at Greenock repairing to comp Aug 42.
-
 Navy XXXHull/Pennant nr XXXX    Class X(20)                    Theatre X(20)       Fleet X(20)         Formation X(25)          Captain X(25)            Speed (kn)99V99                    Fire Control Computer X(21)                    Radar model X(20)   Sonar model X(20)   Depth Charges 999            2nd Aircraft number 999
 |   Type|   Name X(20)          |                   Status X(11)                   |                   |                        |                        |    Belt Armour (mm)999V99        |                    Heavy AA Guns 999         |                   |                   |  Torpedoes 999             |  2nd Aircraft model X(20)
 |   |   |   |                   |                   |          |                   |                   |                        |                        |    |     Deck Armour (mm)999V99  |                    |  Light AA guns 999      |                   |                   |  |  1st Aircraft number 999|  |                  3rd Aircraft number 999|
