@@ -14,7 +14,7 @@ This project is purely educational, and does therefore comply with the terms of 
 Projects
 =======
 
-P0registrations: Allied ship registration
+P0registrations: List allied ships
 ----------------------
 
 Learning goals:
@@ -22,8 +22,9 @@ Learning goals:
 * Create a new data file on the z/OS mainframe, from data wider than 80 characters per line.
 * Read and write data to this file using different COBOL programs, verify that the data is uploaded correctly.
 * Use COBOL intrinsic functions to cast strings to numbers (`NUMVAL`)
-* make, link and call user defined function libraries for trimming trailing spaces, and converting hull classifications (like 'BB') to full type names (like 'Battleship').
-* Use COBOL to print data to another output file in a Human readable format
+* Use at least one custom function, defined in a seperate file (in my case, a function which surrounds a string with quotes, and trims to content).
+* Link and compile multiple functions together
+* Use COBOL to print data in JSON (so a web-browser can present it)
 
 Scenario:
 
@@ -35,9 +36,14 @@ I have made two data files: First I made a file with all the data, and some expl
 
 One immediate problem is that there are more than 80 characters per line, which z/OS doesn't normally support.
 
-
 The data in `alliedships.txt` has been read off mainly from [https://www.naval-history.net/xDKWW2-4101-26RNHome.htm](the Naval-history.net project), with ship data verified on the [http://www.dreadnoughtproject.org/tfs/index.php/Main_Page](the dreadnought project Wiki)
 
 WARNING, I do NOT guarantee that some errors haven't made their way into my data-set!
 
-I have also made two COBOL programs: the first getShips.cbl simply gets and prints the ship names in a table. This is slightly complicated by the 80 character limit
+The first COBOL program I have made, listships.cbl, lists ships in the file, to upload it to z/OS I have shortened its name to LSSHP and placed it in.
+
+It merely loops through the file, and prints the data out as a json list of ships.
+
+To do that, I had to make a function which can put quotation marks around string names, after trimming excess spaces. This function has been placed in the file MKQUOTE.cbl, uploaded as MKQUOTE to Z/OS.
+
+These two files need to be compiled and linked, this is done with the file listships.jcl
