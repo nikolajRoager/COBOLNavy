@@ -20,7 +20,9 @@ P0registrations: Allied ship registration
 Learning goals:
 
 * Create a new data file on the z/OS mainframe, from data wider than 80 characters per line.
-* Read and write data to this file using different COBOL programs, verify that the data is uploaded correctly
+* Read and write data to this file using different COBOL programs, verify that the data is uploaded correctly.
+* Use COBOL intrinsic functions to cast strings to numbers (`NUMVAL`)
+* make, link and call user defined function libraries for trimming trailing spaces, and converting hull classifications (like 'BB') to full type names (like 'Battleship').
 * Use COBOL to print data to another output file in a Human readable format
 
 Scenario:
