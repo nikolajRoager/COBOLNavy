@@ -51,57 +51,35 @@ RN  LC  83  HMS Southampton     Town Class Cruiser 1OperationalMediterranean Oce
 RN  LC  15  HMS Manchester      Town Class Cruiser 2OperationalNorth-East Atlantic Home Fleet          18th Cruiser Squadron    H A Packer               32.25012.40010.40012152.00008102.00A.F.C.C.             008008H.A.C.S.            None                None                000006002Supermarine Walrus  000None                000None                
 RN  LC  16  HMS Edingburgh      Town Class Cruiser 3OperationalNorth-East Atlantic Home Fleet          18th Cruiser Squadron    C M Blackman             32.25012.40010.40012152.00012102.00A.F.C.C.             012016H.A.C.S.            Type 279            None                000006002Supermarine Walrus  000None                000None                
 RN  CA  54  HMS Kent            County Class        Repairing  North-East Atlantic Home Fleet          18th Cruiser Squadron    D Young-Jamieson         31.50024.00038.10008203.00000000.00A.F.C.C.             004012H.A.C.S.            None                None                000002000None                000None                000None                
-RN  CLAA87  HMS Cairo           Anti-Air Cruiser    OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  I R J Black              29.00076.20002.50005152.00005152.00None                 005009H.A.C.S.            
-Anti-aircraft ships (Administered by Rear Admiral Destroyers)
-- anti-aircraft cruisers CAIRO (Capt P V McLaughlin, Capt I R H Black from 14 Jan) det to Western Approaches at Tyne repairing to comp 21 Jan,
-CURACOA (Capt C C Hughes-Hallett) arr Scapa Flow 31 Dec, anti-aircraft
-ships ALYNBANK (Capt P Hordern Rtd) dep Scapa Flow 22 Dec, damaged,
-SPRINGBANK (Capt C H Godwin DSO Rtd) at Belfast.
-
- 
-
-Destroyer depot ship (Flag, Rear Admiral Destroyers Rear Adm R H C Hallifax CB) - MAIDSTONE (Capt O L Gordon MVO) at Scapa Flow.
+RN  CLAA87  HMS Cairo           C Class Anti-Air    OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  I R J Black              29.00076.20002.50012102.00008040.00None                 012016H.A.C.S. Mk III     Type 279            None                000002000None                000None                000None                
+RN  CLAA41  HMS Curacoa         C Class Anti-Air    OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  C C Hughes-Hallett       29.00076.20002.50012102.00008040.00None                 012016H.A.C.S. Mk III     Type 279            None                000002000None                000None                000None                
+RN  AKAA41  HMS Alynbank        Auxiliary Anti-Air  OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  P Hordern                26.00000.00000.00000000.00000000.00None                 008008None                None                None                000000000None                000None                000None                
+RN  AVP 00  HMS Springbank      Auxiliary Anti-Air  OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  C H Godwin               26.00000.00000.00000000.00000000.00None                 004002None                None                None                000000001Fairey Fulmar       000None                000None                
+RN  AE  00  HMS Alynbank        Depot Ship          OperationalNorth-East Atlantic Home Fleet          Destroyer Depot          O L Gordon               17.00000.00000.00002102.00000000.00None                 002002None                None                None                000000001Fairey Fulmar       000None                000None                
 
 6th Destroyer Flotilla (Capt C Caslon)
 
-11th Division - ESKIMO (Cdr E G LeGeyt) arr Scapa Flow 31 Dec, MASHONA (Cdr W H Selby) arr Scapa Flow 1 Jan, MATABELE (Cdr R St V Sherbrooke) arr Scapa Flow 31 Dec, SOMALI (Caslon) arr Scapa Flow 31 Dec
+11th Division - ESKIMO (Cdr E G LeGeyt) arr Scapa Flow 31 Dec,
+MASHONA (Cdr W H Selby) arr Scapa Flow 1 Jan, MATABELE (Cdr R St V Sherbrooke) arr Scapa Flow 31 Dec,
+SOMALI (Caslon) arr Scapa Flow 31 Dec
 
 12th Division - BEDOUIN (Cdr J A McCoy) arr Scapa Flow 31 Dec
 
- 
+6th Flotilla destroyers repairing - ASHANTI (Cdr W G Davis DSC) at Wallsend under long repair to comp at the end of Aug 41,
+ PUNJABI (Cdr J T Lean) at Plymouth boiler cleaning to comp 4 Jan
 
-6th Flotilla destroyers repairing - ASHANTI (Cdr W G Davis DSC) at Wallsend under long repair to comp at the end of Aug 41, PUNJABI (Cdr J T Lean) at Plymouth boiler cleaning to comp 4 Jan
+7th Destroyer Flotilla (Capt S H T Arliss) - NAPIER (Arliss) at Scapa Flow,
+NIZAM (Lt Cdr M J Clark RAN) at Clyde to comp construction 8 Jan
 
- 
-
-7th Destroyer Flotilla (Capt S H T Arliss) - NAPIER (Arliss) at Scapa Flow, NIZAM (Lt Cdr M J Clark RAN) at Clyde to comp construction 8 Jan
-
- 
-
-12th Destroyer Flotilla (Flotilla being absorbed into various escort groups) - KEPPEL (Lt R J Hanson, Cdr A M Sheffield in Feb) arr Loch Alsh 1 Jan
-
+12th Destroyer Flotilla (Flotilla being absorbed into various escort groups) -
+KEPPEL (Lt R J Hanson, Cdr A M Sheffield in Feb) arr Loch Alsh 1 Jan
  
 
 Vice Admiral Submarines (Vice Adm Sir Max K Horton KCB, DSO)
-
- 
-
 2nd Submarine Flotilla (Capt G C P Menzies) - depot ship FORTH (Capt Menzies) at Clyde, yachts CUTTY SARK (Cdr R H Mack Rtd) at Clyde, SURPISE (Capt E Stubbs Rtd) arr Greenock 31 Dec, submarines CACHALOT (Cdr J D Luce DSO) arr Clyde 31 Dec, TAKU (Lt J F B Brown) at Glasgow repairing to comp 4 Jan, TALISMAN (Lt Cdr P S Francis) dep Greenock 26 Dec, THUNDERBOLt (Lt C B Crouch) at Holy Loch, TIGRIS (Lt Cdr H F Bone DSO, DSC) dep Greenock, TRIBUNE (Lt E F Balston, Lt Cdr R G Norfolk from 2 Jan) at Holy Loch, TRIDENT (Cdr G M Sladen) dep Greenock 17 Dec, TUNA (Lt Cdr M K Cavenagh-Mainwaring DSO) dep Holy Loch 12 Dec
-
- 
-
 3rd Submarine Flotilla (Capt H M C Ionides) - depot ship TITANIA (Capt Ionides) arr Clyde 21 Nov, yacht WHITE BEAR (Cdr C G Fleming Rtd) arr Dundee 22 Dec, submarines CLYDE (Cdr D C Ingram DSC) at Devonport repairing to comp 31 Mar, SEVERN (Lt Cdr A N G Campbell) at Elderslie repairing to comp 4 Jan
-
- 
-
 6th Submarine Flotilla (Capt G A W Voelcker) - miscellaneous ship ELFIN (Capt Voelcker) at Blyth, submarines SEALION (Cdr B Bryant DSC) dep Rosyth 22 Dec, SNAPPER (Lt G V Prowse) at Tyne refitting to comp 4 Jan, STURGEON (Lt Cdr D St Clair Ford) dep Blyth 31 Dec, SUNFISH (Lt G R Colvin) at Rosyth
-
- 
-
 7th Submarine Flotilla (administered by Vice Adm Submarines) – depot ship CYCLOPS (Capt R L M Edwards) at Rothesay, ALECTO (Cdr R M G Gambier) at Tobermory, yacht BREDA (Capt A E Johnston Rtd) at Rothesay, Dutch destroyer Z.8 at Clyde, submarines H.28 (Lt M R G Wingfield, Lt L W A Bennington from 1 Jan) dep Rothesay for Tobermory on 1 Jan, H.31 (Lt R D Whiteway-Wilkinson) arr Rothesay 25 Dec, H.32 (Lt R L Alexander) at Campeltown, H.33 (Lt G P Darling, Lt R M Favell from 6 Jan) at Tobermory, H.34 (Lt L W Napier, Lt J S Huddart from 13 Jan) dep Clyde 30 Dec to arr Sheerness 6 Jan, H.43 (Lt I L M McGeoch) at Londonderry, H.44 (Lt A R Hezlet) at Sheerness repairing to comp 6 Jan, H.50 (Lt M Wilmott) at Holyhead, OBERON (Lt G A I Graham) at Rothesay, OTWAY (Lt H R B Newton) at Campbeltown, Dutch submarines O.9 (Lt Cdr H A W Goossens) at Tobermory, O.10 (Lt Cdr Lt J H Geijs) at Dundee, O.14 (Lt Cdr H Tichelman) arr Dundee 22 Dec, Norwegian submarine B.1 at Rothesay.
-
- 
-
 9th Submarine Flotilla (Capt J G Roper OBE) - shore establishment AMBROSE (Capt J G Roper OBE) at Dundee, yacht ACQUISITION (Ty Elec Lt R Platt RNVR) on patrol, submarines L.23 (Lt L F L Hill) at Scapa Flow, L.26 (Lt R S Frost RNR, Lt C Gordon from 5 Jan) arr Rosyth 26 Dec, URGE (Lt E P Tomkinson) at Holy Loch, Dutch submarines O.21 (Lt Cdr J F van Dulm) dep Dundee 29 Dec, O.23 (Lt Cdr G B M van Erkel) arr Dundee 1 Jan, O.24 (Lt Cdr O de Booy) at Grangemouth repairing, French submarine RUBIS (LV G E J Cabanier) at Dundee repairing to comp 22 Mar, Polish submarine WILK at Dundee
 
  
