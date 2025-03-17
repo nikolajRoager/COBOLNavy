@@ -14,7 +14,7 @@ This project is purely educational, and does therefore comply with the terms of 
 Projects
 =======
 
-P0registrations: List allied ships
+Ship Listing
 ----------------------
 
 Learning goals:
@@ -32,18 +32,16 @@ Scenario:
 
 Solution and product:
 
-I have made two data files: First I made a file with all the data, and some explanations: `alliedships_Example.txt` which contain the same data, with a bit of explanation of the format, with one line per ship. `alliedships.txt` contains the actual data we want to upload, wrapped so there is no more than 80 chars per line because backwards compatibility I guess. You can upload it with this CLI command `zowe zos-files upload file-to-data-set P0registration/data/alliedships.txt "USERNAME.USERDATA(ALLIED)"` (After creating the partioned data-set USERDATA, you may need to shorten the names)
-
-One immediate problem is that there are more than 80 characters per line, which z/OS doesn't normally support.
+I have made two data files: First I made a file with all the data, and some explanations: `alliedships_Example.txt` which contain the same data, with a bit of explanation of the format, with one line per ship. `alliedships.txt` contains the actual data we want to upload, wrapped so there is no more than 80 chars per line because backwards compatibility. You can upload it with this CLI command `zowe zos-files upload file-to-data-set P0registration/data/alliedships.txt "USERNAME.USERDATA(ALLIED)"` (After creating the partioned data-set USERDATA, you may need to shorten the names)
 
 The data in `alliedships.txt` has been read off mainly from [https://www.naval-history.net/xDKWW2-4101-26RNHome.htm](the Naval-history.net project), with ship data verified on the [http://www.dreadnoughtproject.org/tfs/index.php/Main_Page](the dreadnought project Wiki)
 
 WARNING, I do NOT guarantee that some errors haven't made their way into my data-set!
 
-The first COBOL program I have made, listships.cbl, lists ships in the file, to upload it to z/OS I have shortened its name to LSSHP and placed it in.
+The first COBOL program I have made, LSSHP.cbl, lists ships in the file.
 
 It merely loops through the file, and prints the data out as a json list of ships.
 
 To do that, I had to make a function which can put quotation marks around string names, after trimming excess spaces. This function has been placed in the file MKQUOTE.cbl, uploaded as MKQUOTE to Z/OS.
 
-These two files need to be compiled and linked, this is done with the file listships.jcl
+These two files need to be compiled and linked, this is done with the file LSSHPJ.jcl
