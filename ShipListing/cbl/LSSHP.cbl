@@ -28,6 +28,9 @@
            05 SHIP-PART OCCURS 5 TIMES PIC X(80).
       *Used for storing the results of numval
        01 WS-NUMBERS.
+           05 WS-PLANE-0 PIC 999.
+           05 WS-PLANE-1 PIC 999.
+           05 WS-PLANE-2 PIC 999.
            05 WS-999 PIC 999.
            05 WS-9999 PIC 9999.
            05 WS-2decimal PIC 99.99.
@@ -79,9 +82,9 @@
                AT END DISPLAY ']' STOP RUN
                END-READ
            END-PERFORM.
-           
+
            IF FIRST_SHIP = 'n'
-              DISPLAY ','
+              DISPLAY '  ,'
            END-IF.
 
            MOVE 'n' TO FIRST_SHIP.
@@ -93,129 +96,136 @@
 
       *Print everything in a human readable format:
       *JSON (People are not going to be looking directly at the output)
-           DISPLAY '{'
+           DISPLAY '  {'
       *Similar to stoi() or atoi() in C++/C, we need to save to workspace first
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-IDNR).
-           DISPLAY '"Id": "' SHIP-NAVY SHIP-TYPE WS-999 '",'.
+           DISPLAY '    "Id": "' SHIP-NAVY SHIP-TYPE WS-999 '",'.
            MOVE 4 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-NAVY, STRING-LEN RETURNING BUFFER.
-           DISPLAY '"Navy":' BUFFER ','.
+           DISPLAY '    "Navy":' BUFFER .
            MOVE 4 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-TYPE , STRING-LEN RETURNING BUFFER.
-           DISPLAY '"Type":' BUFFER ','.
+           DISPLAY '    "Type":' BUFFER .
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-NAME , STRING-LEN RETURNING BUFFER.
-           DISPLAY '"Name":' BUFFER ','.
-           DISPLAY '"Pennant-nr":' SHIP-IDNR.
+           DISPLAY '    "Name":' BUFFER .
+           DISPLAY '    "Pennant-nr":' SHIP-IDNR.
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-CLASS , STRING-LEN RETURNING BUFFER.
-           DISPLAY '"Class":' BUFFER ','.
+           DISPLAY '    "Class":' BUFFER .
            MOVE 11 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-STATUS , STRING-LEN
               RETURNING BUFFER.
-           DISPLAY '"Status":' BUFFER ','.
+           DISPLAY '    "Status":' BUFFER .
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-THEATRE , STRING-LEN
               RETURNING BUFFER.
-           DISPLAY '"Theatre":' BUFFER ','.
+           DISPLAY '    "Theatre":' BUFFER .
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-FLEET , STRING-LEN
               RETURNING BUFFER.
-           DISPLAY '"Fleet":' BUFFER ','.
+           DISPLAY '    "Fleet":' BUFFER .
            MOVE 25 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-FORMATION , STRING-LEN
               RETURNING BUFFER.
-           DISPLAY '"Formation":' BUFFER ','.
+           DISPLAY '    "Formation":' BUFFER .
            MOVE 25 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-CAPTAIN , STRING-LEN
               RETURNING BUFFER.
-           DISPLAY '"Captain":' BUFFER ','.
+           DISPLAY '    "Captain":' BUFFER .
       *    String to decimals, again save to workspace
            COMPUTE WS-2decimal = FUNCTION NUMVAL(SHIP-SPEED-KN).
-           DISPLAY '"Speed":' WS-2DECIMAL ','.
+           DISPLAY '    "Speed":' WS-2DECIMAL ','.
            COMPUTE WS-3decimal = FUNCTION NUMVAL(SHIP-BELT-ARMOUR-MM).
-           DISPLAY '"BeltArmour":' WS-3decimal ','.
+           DISPLAY '    "BeltArmour":' WS-3decimal ','.
            COMPUTE WS-3decimal = FUNCTION NUMVAL(SHIP-DECK-ARMOUR-MM).
-           DISPLAY '"DeckArmour":' WS-3decimal ','.
+           DISPLAY '    "DeckArmour":' WS-3decimal ','.
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-MAIN-GUN-NR).
-           DISPLAY '"MainGunNr":' WS-999 ','.
+           DISPLAY '    "MainGunNr":' WS-999 ','.
            COMPUTE WS-3decimal = FUNCTION NUMVAL(SHIP-MAIN-GUN-CALIBRE).
-           DISPLAY '"MainGunCalibre":'
+           DISPLAY '    "MainGunCalibre":'
               WS-3decimal ','.
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-SECONDARY-NR).
-           DISPLAY '"SecondaryGunNr":' WS-999 ','.
+           DISPLAY '    "SecondaryGunNr":' WS-999 ','.
            COMPUTE WS-3decimal = FUNCTION
               NUMVAL(SHIP-SECONDARY-CALIBRE).
-           DISPLAY '"SecondaryGunCalibre":'
+           DISPLAY '    "SecondaryGunCalibre":'
               WS-3decimal ','.
 
            MOVE 21 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-FIRE-CONTROL-CPU , STRING-LEN
               RETURNING BUFFER.
-           DISPLAY '"FireControlComputer":'
-              BUFFER ','.
+           DISPLAY '    "FireControlComputer":' BUFFER.
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-HEAVY-AA-NR).
-           DISPLAY '"HeavyAAGunNr":' WS-999 ','.
+           DISPLAY '    "HeavyAAGunNr":' WS-999 ','.
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-LIGHT-AA-NR).
-           DISPLAY '"LightAAGunNr":'  WS-999 ','.
+           DISPLAY '    "LightAAGunNr":'  WS-999 ','.
 
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-AA-CONTROL-CPU , STRING-LEN
               RETURNING BUFFER.
-           DISPLAY '"AAControlComputer":'
-             BUFFER ','.
+           DISPLAY '    "AAControlComputer":'
+             BUFFER.
 
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-RADAR , STRING-LEN
               RETURNING BUFFER.
-
-           DISPLAY '"RadarModel":' BUFFER ','.
+           DISPLAY '    "RadarModel":' BUFFER .
 
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-SONAR, STRING-LEN
               RETURNING BUFFER.
-
-           DISPLAY '"SonarModel":' BUFFER ','.
+           DISPLAY '    "SonarModel":' BUFFER .
 
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-DEPTH-CHARGES).
-           DISPLAY '"DepthCharges":' WS-999 ','.
+           DISPLAY '    "DepthCharges":' WS-999 ','.
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-DEPTH-CHARGES).
-           DISPLAY '"Torpedoes":' WS-999 ','.
+           DISPLAY '    "Torpedoes":' WS-999 ','.
 
-           DISPLAY '"Aircraft":['
-           IF SHIP-FIRST-AIRCRAFT-NR > 0 THEN
+
+           compute WS-PLANE-0 = FUNCTION NUMVAL(SHIP-FIRST-AIRCRAFT-NR)
+           compute WS-PLANE-1 = FUNCTION NUMVAL(SHIP-SECOND-AIRCRAFT-NR)
+           compute WS-PLANE-2 = FUNCTION NUMVAL(SHIP-THIRD-AIRCRAFT-NR)
+
+           DISPLAY '    "Aircraft":['
+           IF WS-PLANE-0 > 0 THEN
               CALL 'MKQUOTE' USING SHIP-FIRST-AIRCRAFT-MODEL ,
                  STRING-LEN RETURNING BUFFER.
-           IF SHIP-FIRST-AIRCRAFT-NR > 0 THEN
-              COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-FIRST-AIRCRAFT-NR).
-           IF SHIP-FIRST-AIRCRAFT-NR > 0 THEN
-              DISPLAY '['  BUFFER ',' WS-999 ']'.
-           IF SHIP-FIRST-AIRCRAFT-NR > 0 THEN
-              IF SHIP-SECOND-AIRCRAFT-NR > 0 THEN
-                   DISPLAY ','
-              ELSE IF SHIP-THIRD-AIRCRAFT-NR > 0 THEN
-                   DISPLAY ','.
+           IF WS-PLANE-0 > 0 THEN
+              DISPLAY '      {'
+              DISPLAY '        "model":'  BUFFER
+              DISPLAY '        "number":'  WS-PLANE-0
+              DISPLAY '      }'
+           END-IF 
+           IF WS-PLANE-0 > 0 THEN
+              IF WS-PLANE-1 > 0 THEN
+                   DISPLAY '    ,'
+              ELSE IF WS-PLANE-2 > 0 THEN
+                   DISPLAY '    ,'.
 
-           IF SHIP-SECOND-AIRCRAFT-NR > 0 THEN
+           IF WS-PLANE-1 > 0 THEN
               CALL 'MKQUOTE' USING SHIP-SECOND-AIRCRAFT-MODEL,
                  STRING-LEN RETURNING BUFFER.
-           IF SHIP-SECOND-AIRCRAFT-NR > 0 THEN
-              COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-SECOND-AIRCRAFT-NR).
-           IF SHIP-SECOND-AIRCRAFT-NR > 0 THEN
-              DISPLAY '['  BUFFER ',' WS-999 ']'.
-           IF SHIP-SECOND-AIRCRAFT-NR > 0 THEN
-              IF SHIP-THIRD-AIRCRAFT-NR > 0 THEN
-                   DISPLAY ','.
+           IF WS-PLANE-1 > 0 THEN
+              DISPLAY '      {'
+              DISPLAY '        "model":'  BUFFER
+              DISPLAY '        "number":'  WS-PLANE-1
+              DISPLAY '      }'
+           END-IF 
+           IF WS-PLANE-1 > 0 THEN
+              IF WS-PLANE-2 > 0 THEN
+                   DISPLAY '    ,'.
 
-           IF SHIP-THIRD-AIRCRAFT-NR > 0 THEN
+           IF WS-PLANE-2 > 0 THEN
               CALL 'MKQUOTE' USING SHIP-THIRD-AIRCRAFT-MODEL,
                  STRING-LEN RETURNING BUFFER.
-           IF SHIP-THIRD-AIRCRAFT-NR > 0 THEN
-              COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-THIRD-AIRCRAFT-NR).
-           IF SHIP-THIRD-AIRCRAFT-NR > 0 THEN
-              DISPLAY '['  BUFFER ',' WS-999 ']'.
-           IF SHIP-THIRD-AIRCRAFT-NR > 0 THEN DISPLAY BUFFER.
-           DISPLAY ']'
+           IF WS-PLANE-2 > 0 THEN 
+              DISPLAY '      {'
+              DISPLAY '        "model":'  BUFFER
+              DISPLAY '        "number":'  WS-PLANE-2
+              DISPLAY '      }'
+           END-IF
+           DISPLAY '    ]'
 
 
       *    DISPLAY '"Torpedoes":' '"' SHIP-FIRST-AIRCRAFT-NR '"'.
@@ -226,6 +236,6 @@
       *    05 SHIP-THIRD-AIRCRAFT-NR PIC 999.
       *    05 SHIP-THIRD-AIRCRAFT-MODEL PIC X(20).
 
-           DISPLAY '}'
+           DISPLAY '  }'
 
            GO TO READ-AND-PRINT-SHIPS.

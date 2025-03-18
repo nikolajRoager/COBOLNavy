@@ -1,4 +1,4 @@
-      *This program surounds any string with quotes,
+      *This program surounds any string with quotes and a ','
       * in the process removing leading and trailing spaces
       *-----------------------
        IDENTIFICATION DIVISION.
@@ -22,6 +22,10 @@
 
        PROCEDURE DIVISION USING LK-INPUT , LK-LEN RETURNING LK-OUTPUT.
       *Move to local storage
+           MOVE 0 TO ASTART.
+           MOVE 0 TO ALEN.
+           MOVE SPACES TO B.
+           MOVE SPACES TO A.
            MOVE LK-INPUT(1:LK-LEN) TO A.
            INSPECT A
                TALLYING ASTART FOR LEADING SPACES.
@@ -33,7 +37,7 @@
            COMPUTE ALEN = 79 - ALEN - ASTART.
 
       *Make the string
-           STRING  '"' A(ASTART:ALEN) '"'
+           STRING  '"' A(ASTART:ALEN) '",'
               DELIMITED BY SIZE INTO B.
 
       *Move to return value
