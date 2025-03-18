@@ -53,22 +53,26 @@ RN  LC  16  HMS Edingburgh      Town Class Cruiser 3OperationalNorth-East Atlant
 RN  CA  54  HMS Kent            County Class        Repairing  North-East Atlantic Home Fleet          18th Cruiser Squadron    D Young-Jamieson         31.50024.00038.10008203.00000000.00A.F.C.C.             004012H.A.C.S.            None                None                000002000None                000None                000None                
 RN  CLAA87  HMS Cairo           C Class Anti-Air    OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  I R J Black              29.00076.20002.50012102.00008040.00None                 012016H.A.C.S. Mk III     Type 279            None                000002000None                000None                000None                
 RN  CLAA41  HMS Curacoa         C Class Anti-Air    OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  C C Hughes-Hallett       29.00076.20002.50012102.00008040.00None                 012016H.A.C.S. Mk III     Type 279            None                000002000None                000None                000None                
+<<<<<<< HEAD
 RN  AKAA41  HMS Alynbank        Auxiliary Anti-Air  OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  P Hordern                26.00000.00000.00000000.00000000.00None                 008008None                None                None                000000000None                000None                000None                
 RN  AVP 00  HMS Springbank      Auxiliary Anti-Air  OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  C H Godwin               26.00000.00000.00000000.00000000.00None                 004002None                None                None                000000001Fairey Fulmar       000None                000None                
 RN  AE  00  HMS Maidstone       Depot Ship          OperationalNorth-East Atlantic Home Fleet          Destroyer Depot          O L Gordon               17.00000.00000.00002102.00000000.00None                 002002None                None                None                000000001Fairey Fulmar       000None                000None                
+=======
+RN  FF  41  HMS Alynbank        Auxiliary Anti-Air  OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  P Hordern                26.00000.00000.00000000.00000000.00None                 008008None                None                None                000000000None                000None                000None                
+RN  AV  00  HMS Springbank      Seaplane Tender     OperationalNorth-East Atlantic Home Fleet          1st Anti-aircraft ships  C H Godwin               26.00000.00000.00000000.00000000.00None                 004002None                None                None                000000001Fairey Fulmar       000None                000None                
+RN  AE  00  HMS Maidstone       Depot Ship          OperationalNorth-East Atlantic Home Fleet          Destroyer Depot          O L Gordon               17.00000.00000.00002102.00000000.00None                 002002None                None                None                000000000None                000None                000None                
+RN  DD  75  HMS Eskimo          Tribal Class        Operational North-East Atlantic Home Fleet         6th Flot./11th Div.      E G LeGeyt               36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+RN  DD  59  HMS Mashona         Tribal Class        Operational North-East Atlantic Home Fleet         6th Flot./11th Div.      W H Selby                36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+RN  DD  26  HMS Matabele        Tribal Class        Operational North-East Atlantic Home Fleet         6th Flot./11th Div.      R st V Sherbrooke        36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+RN  DD  33  HMS Somali          Tribal Class        Operational North-East Atlantic Home Fleet         6th Flot./11th Div.      C Claslon                36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+RN  DD  67  HMS Beduin          Tribal Class        Operational North-East Atlantic Home Fleet         6th Flot./12th Div.      J A McKoy                36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+RN  DD  51  HMS Ashanti         Tribal Class        Repairing   North-East Atlantic Home Fleet         6th Flot./12th Div.      W G Davis                36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+RN  DD  21  HMS Punjabi         Tribal Class        Repairing   North-East Atlantic Home Fleet         6th Flot./12th Div.      J T Lean                 36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+RN  DD  26  HMS Punjabi         Tribal Class        Repairing   North-East Atlantic Home Fleet         6th Flot./12th Div.      J T Lean                 36.00000.00000.00008120.00000000.00A.F.C.C.             008012H.A.F.C.            None                ASDIC type 124      020004000None                000None                000None                
+>>>>>>> b3ac08bb9ee1115e54a0ffd75119dfbd7d18049b
 
-6th Destroyer Flotilla (Capt C Caslon)
-
-11th Division - ESKIMO (Cdr E G LeGeyt) arr Scapa Flow 31 Dec,
-MASHONA (Cdr W H Selby) arr Scapa Flow 1 Jan, MATABELE (Cdr R St V Sherbrooke) arr Scapa Flow 31 Dec,
-SOMALI (Caslon) arr Scapa Flow 31 Dec
-
-12th Division - BEDOUIN (Cdr J A McCoy) arr Scapa Flow 31 Dec
-
-6th Flotilla destroyers repairing - ASHANTI (Cdr W G Davis DSC) at Wallsend under long repair to comp at the end of Aug 41,
- PUNJABI (Cdr J T Lean) at Plymouth boiler cleaning to comp 4 Jan
-
-7th Destroyer Flotilla (Capt S H T Arliss) - NAPIER (Arliss) at Scapa Flow,
+7th Destroyer Flotilla (Capt S H T Arliss)
+NAPIER (Arliss) at Scapa Flow,
 NIZAM (Lt Cdr M J Clark RAN) at Clyde to comp construction 8 Jan
 
 12th Destroyer Flotilla (Flotilla being absorbed into various escort groups) -
