@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "dVN98W6BxPfaUU8I2EEoYCzbbCishl6BFk/aoyP7oms=",
+  "Source": "DockyardApi",
+  "BasePath": "_content/DockyardApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
