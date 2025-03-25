@@ -7,7 +7,7 @@ namespace DockyardApi.Models;
 ///<summary>
 /// Any commisioned warship
 /// </summary>
-class Warship
+public class Warship
 {
     /// <summary>
     /// Unique id made from the navy, hull-type and pennant number

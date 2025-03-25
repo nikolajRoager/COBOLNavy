@@ -13,7 +13,8 @@ namespace DockyardApi.Services.ZosmfRESTapi
     ///</summary>
     public interface IZosmfRESTapi
     {
-        public Task<IEnumerable<JobDocument>> getJobs();
+        public Task<IEnumerable<JobDocument>> getJobs ();
+//        public Task<IEnumerable<Warship>>     getShips();
     }
 
     ///<summary>
@@ -30,9 +31,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
             this.zosUsername=zosUsername;
         
             handler = new HttpClientHandler();
-            //WARNING, DANGEROUS, only for debugging
-            //Ignore SSL certificate errors (only for debugging! don't use this, seriously don't)
-            //Instead install the certificate for the mainframe
+            //only for testing, disable cerfification
             handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
 
             zosmfUrl = $"https://{host}:{port}/zosmf/restjobs/jobs";
@@ -46,7 +45,6 @@ namespace DockyardApi.Services.ZosmfRESTapi
 
         public async Task<IEnumerable<JobDocument>> getJobs()
         {
-            //To verify the connection works, ask for the list of jobs
             HttpResponseMessage response = await client.GetAsync(zosmfUrl+"?owner="+zosUsername);
             if (!response.IsSuccessStatusCode)
             {
@@ -65,6 +63,31 @@ namespace DockyardApi.Services.ZosmfRESTapi
 
                 return jobList?.Jobs ?? new List<JobDocument>();
             }
+        }
+
+/*
+        public async Task<IEnumerable<Warship>> getShips()
+        {
+
+        }
+        */
+
+        ///<summary>
+        ///AI generated code to sumbit a job
+        ///</summary>
+        static async Task<string> SubmitJob(HttpClient client, string jcl)
+        {
+            var content = new StringContent(jcl, Encoding.UTF8, "text/plain");
+            HttpResponseMessage response = await client.PostAsync("restjobs/jobs", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseBody = await response.Content.ReadAsStringAsync();
+                using JsonDocument doc = JsonDocument.Parse(responseBody);
+                string jobId = doc.RootElement.GetProperty("jobid").GetString();
+                return jobId;
+            }
+            return null;
         }
     }
 }

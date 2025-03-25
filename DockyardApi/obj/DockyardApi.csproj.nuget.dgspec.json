@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/DockyardApi.csproj": {}
+    "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj": {}
   },
   "projects": {
-    "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/DockyardApi.csproj": {
+    "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/DockyardApi.csproj",
+        "projectUniqueName": "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
         "projectName": "DockyardApi",
-        "projectPath": "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/DockyardApi.csproj",
-        "packagesPath": "/home/nikolaj/.nuget/packages/",
-        "outputPath": "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/obj/",
+        "projectPath": "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
+        "packagesPath": "C:\\Users\\Nikolaj\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/nikolaj/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Nikolaj\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -38,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.100"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -68,12 +74,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[9.0.3, 9.0.3]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -82,7 +82,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.104/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

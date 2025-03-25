@@ -22,7 +22,24 @@ public class ShipController : ControllerBase
     public async Task<ActionResult<IEnumerable<JobDocument>>> GetZJobs()
     {
         var list = await zosmfApi.getJobs();
-
         return Ok(list);
     }
+
+/*
+    [HttpGet("GetShips")]
+    public async Task<ActionResult<IEnumerable<Warship>>> GetShips()
+    {
+        //Submit JCL, running list ships program, listen for output and return it or error
+        return Ok();
+    }
+
+    //Get ship by its unique id string
+    [HttpGet("GetShip/{id}")]
+    public async Task<ActionResult<Warship>> GetShips(string id)
+    {
+        //Submit JCL to get a single ship as JSON, listen for output and return it or error
+        return Ok();
+    }*/
+
+
 }
