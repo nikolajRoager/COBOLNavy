@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj": {}
+    "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj": {
+    "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
+        "projectUniqueName": "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
         "projectName": "DockyardApi",
-        "projectPath": "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
-        "packagesPath": "C:\\Users\\Nikolaj\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Nikolaj\\Cobol\\COBOLNavy\\DockyardApi\\obj\\",
+        "projectPath": "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
+        "packagesPath": "C:\\Users\\KOM\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Nikolaj\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\KOM\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -82,7 +76,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -28,7 +28,7 @@ public class Warship
     /// <summary>
     /// Royal Navy Pennant number, or US Hull number, typically unique for ships in a type
     /// </summary>
-    [JsonPropertyName("Pennant-nr")] public string Pennant {get;set;} = null!;
+    [JsonPropertyName("Pennant-nr")] public int Pennant {get;set;}
     /// <summary>
     /// Class of the ship, typically name of the first ship of the class
     /// </summary>

@@ -25,14 +25,22 @@ public class ShipController : ControllerBase
         return Ok(list);
     }
 
-/*
     [HttpGet("GetShips")]
     public async Task<ActionResult<IEnumerable<Warship>>> GetShips()
     {
-        //Submit JCL, running list ships program, listen for output and return it or error
-        return Ok();
+        try
+        {
+            var list = await zosmfApi.getShips();
+            return Ok(list);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message);
+
+        }
     }
 
+/*
     //Get ship by its unique id string
     [HttpGet("GetShip/{id}")]
     public async Task<ActionResult<Warship>> GetShips(string id)
