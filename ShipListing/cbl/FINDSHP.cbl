@@ -1,7 +1,7 @@
       *-----------------------
        IDENTIFICATION DIVISION.
       *-----------------------
-       PROGRAM-ID.    LSSHP
+       PROGRAM-ID.    FINDSHP
        AUTHOR.        Nikolaj R Christensen
       *--------------------
        ENVIRONMENT DIVISION.
@@ -23,7 +23,6 @@
        01 STRING-LEN  PIC 9(2) VALUE 0.
        01 BUFFER PIC X(80).
        01 IDX PIC 9.
-       01 FIRST_SHIP PIC x VALUE 'y'.
        01 SHIP-ID PIC X(12).
        01 SNL PIC 9.
        01 STL PIC 9.
@@ -84,28 +83,18 @@
        OPEN-FILES.
            OPEN INPUT  ALLIED-SHIPS.
       *
-           DISPLAY '['.
        READ-AND-PRINT-SHIPS.
            PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 5
                READ ALLIED-SHIPS INTO SHIP-PART(IDX)
-               AT END DISPLAY ']' STOP RUN
                END-READ
            END-PERFORM.
 
-           IF FIRST_SHIP = 'n'
-              DISPLAY '  ,'
-           END-IF.
-
-           MOVE 'n' TO FIRST_SHIP.
 
       *Copy the chars into this buffer, so everything is in the right location
            MOVE SHIP-BUFFER TO SHIP-DATA.
+      *Get the id, and check if it matches
 
 
-
-      *Print everything in a human readable format:
-      *JSON (People are not going to be looking directly at the output)
-           DISPLAY '  {'
       *Similar to stoi() or atoi() in C++/C, we need to save to workspace first
       *Not zero-suppressed, so becomes 006 or whatever
            COMPUTE WS-999 = FUNCTION NUMVAL(SHIP-IDNR).
@@ -124,7 +113,10 @@
            STRING '"' SHIP-NAVY(1:SNL) SHIP-TYPE(1:STL) WS-999 '"'
               SPACES
               DELIMITED BY SIZE INTO SHIP-ID
-
+      *Ok then print it
+      *Print everything in a human readable format:
+      *JSON (People are not going to be looking directly at the output)
+           DISPLAY '  {'
            DISPLAY '    "Id":' SHIP-ID ','.
            MOVE 4 TO STRING-LEN.
            CALL 'MKQUOTE' USING SHIP-NAVY, STRING-LEN RETURNING BUFFER.

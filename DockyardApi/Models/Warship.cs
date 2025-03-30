@@ -120,7 +120,7 @@ public class Warship
     ///<summary>
     ///Model Anti Air fire control computer (if any), more modern models significantly improve effectiveness
     ///</summary>
-    [JsonPropertyName("AAControlCompute")] public string AAControlCompute {get;set;} = null!;
+    [JsonPropertyName("AAControlComputer")] public string AAControlCompute {get;set;} = null!;
     ///<summary>
     ///Most advanced radar model present, significantly improves surface and air spotting, nightfighting, and bad-weather fighting capabilities
     ///Also works against surfaced submarines (German submarines need to surface to recharge their batteries)
@@ -137,5 +137,15 @@ public class Warship
     ///<summary>
     ///Number of on-board torpedo-launchers. Actual number of reload-torpedoes is hard to find, and reloading takes a long time, so this is roughly the torpedo firepower of the ship
     ///</summary>
-    [JsonPropertyName("Torpedoes")] public int Torpedoes {get;set;}
+    [JsonPropertyName("Torpedos")] public int Torpedos {get;set;}
+
+    [JsonPropertyName("Aircraft")] public List<PlaneComplement> Aircraft {get;set;}=null!;
+
+    public class PlaneComplement
+    {
+        [JsonPropertyName("Model")] public string Model {get;set;} = null!;
+        [JsonPropertyName("Number")] public int Number {get;set;}
+    }
+
+
 }

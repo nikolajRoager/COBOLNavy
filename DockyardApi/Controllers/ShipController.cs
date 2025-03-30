@@ -40,14 +40,29 @@ public class ShipController : ControllerBase
         }
     }
 
-/*
     //Get ship by its unique id string
     [HttpGet("GetShip/{id}")]
-    public async Task<ActionResult<Warship>> GetShips(string id)
+    public async Task<ActionResult<Warship>> GetShip(string id)
     {
-        //Submit JCL to get a single ship as JSON, listen for output and return it or error
         return Ok();
-    }*/
+    }
 
+    //Add a ship at the end of the list
+    [HttpPost("AddShip/{id}")]
+    public async Task<ActionResult<Warship>> AddShip(string id)
+    {
+        return Ok();
+    }
 
+    /// <summary>
+    ///Update status of ship with this id, to that, there is no delete function, instead set status to "sunk" or "scrapped"
+    ///For practical purposes, a museum ship is considered "scrapped"
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [HttpGet("UpdateShip/{id}")]
+    public async Task<ActionResult<Warship>> UpdateShip(string id)
+    {
+        return Ok();
+    }
 }

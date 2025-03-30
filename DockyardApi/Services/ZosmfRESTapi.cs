@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Text.Json;
 using DockyardApi.Models;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace DockyardApi.Services.ZosmfRESTapi
 {
@@ -29,8 +30,15 @@ namespace DockyardApi.Services.ZosmfRESTapi
         private readonly string zosmfUrl;
         private readonly string getShipsJCL;
         
+        /// <summary>
+        /// Path to executable zowe commandline Executable
+        /// </summary>
+        private readonly string zoweCliExe;
+
         public ZosmfRESTapi(string host, string port, string zosUsername, string zosPassword)
         {
+            
+
             this.zosUsername=zosUsername;
         
             handler = new HttpClientHandler();
@@ -49,6 +57,66 @@ namespace DockyardApi.Services.ZosmfRESTapi
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authInfo);
             
             getShipsJCL=$"{zosUsername}.JCL(GETSHPS)";
+            
+            zoweCliExe="";//If will be set below, but the compiler doesn't know that and keeps giving me warnings
+            //First check if Zowe is in PATH
+            ProcessStartInfo which = new ProcessStartInfo
+            {
+                FileName = OperatingSystem.IsWindows() ? "where" : "which",
+                Arguments = "zowe",
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+            Process process = new Process {StartInfo = which};
+            process.Start();
+            string? path = process.StandardOutput.ReadLine();
+            process.WaitForExit();
+
+            bool zoweNotFound;
+            if (!string.IsNullOrEmpty(path))
+            {
+                //Found it, just call it and see if it works
+                zoweCliExe=path;
+                zoweNotFound=zoweCliWorks();
+            }
+            else
+                zoweNotFound=true;
+            if (zoweNotFound)
+            {
+                Console.WriteLine($"INFO: Zowe CLI not found in PATH, searching npm install location");
+                if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    //This is where it would go if it was installed through npm
+                    zoweCliExe=  $"C:\\Users\\{Environment.UserName}\\AppData\\Roaming\\npm\\zowe.cmd";
+                }
+                else//Linux or similar
+                {
+                    //get npm bin
+                    ProcessStartInfo npm = new ProcessStartInfo
+                    {
+                        FileName = "npm",
+                        Arguments = "-g",
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+                    Process npm_process = new Process {StartInfo = npm};
+                    npm_process.Start();
+                    string? bin_path = process.StandardOutput.ReadLine();
+                    process.WaitForExit();
+
+                    //oh well just try this
+                    if (string.IsNullOrEmpty(bin_path))
+                        bin_path = "/usr";
+
+                    zoweCliExe=Path.Combine(Path.Combine(bin_path.Trim(), "bin"),"zowe");
+                }
+            }
+            if (!zoweCliWorks())
+                throw new Exception("Zowe CLI could not be found, install it through npm, and add it to your path");
+            Console.WriteLine($"INFO: Found Zowe CLI at {zoweCliExe}");
+
         }
 
 
@@ -166,7 +234,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
         {
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
-                    FileName =  @"C:\Users\KOM\AppData\Roaming\npm\zowe.cmd",
+                    FileName =  zoweCliExe,
                     Arguments= $"zos-jobs submit ds \"{jclJob}\" --rfj",
                     RedirectStandardOutput=true,
                     RedirectStandardError=true,
@@ -274,6 +342,52 @@ namespace DockyardApi.Services.ZosmfRESTapi
                 }
             
             throw new Exception("Job did not produce sysout");
+        }
+
+        /// <summary>
+        /// Try launching zowe cli to see if the address is right, return true if it works
+        /// </summary>
+        /// <returns></returns>
+        public bool zoweCliWorks()
+        {
+            //Just inquire the version
+            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            {
+                    FileName =  zoweCliExe,
+                    Arguments= $"-V",
+                    RedirectStandardOutput=true,
+                    RedirectStandardError=true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+            };
+            //Launch the process
+            try
+            {
+                using (Process process = new Process())
+                {
+                    process.StartInfo=processStartInfo;
+                    
+                    //Launch the process
+                    process.Start();
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+
+                    //Async is not available
+                    process.WaitForExit();
+
+                    //This will only happen is the launching of the command fails
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }
