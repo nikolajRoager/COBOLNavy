@@ -19,7 +19,8 @@ Ship Listing
 
 Learning goals:
 
-* Create a new data file on the z/OS mainframe, from data wider than 80 characters per line.
+* Upload data to the z/OS mainframe, preferably to a VSAM data set
+* Efficiently find, add, and modify data on z/OS based on some unique id
 * Read and write data to this file using different COBOL programs, verify that the data is uploaded correctly.
 * Use COBOL intrinsic functions to cast strings to numbers (`NUMVAL`)
 * Use at least one custom function, defined in a seperate file (in my case, a function which surrounds a string with quotes, and trims to content).
@@ -32,7 +33,10 @@ Scenario:
 
 Solution and product:
 
-I have made two data files: First I made a file with all the data, and some explanations: `alliedships_Example.txt` which contain the same data, with a bit of explanation of the format, with one line per ship. `alliedships.txt` contains the actual data we want to upload, wrapped so there is no more than 80 chars per line because backwards compatibility. You can upload it with this CLI command `zowe zos-files upload file-to-data-set P0registration/data/alliedships.txt "USERNAME.USERDATA(ALLIED)"` (After creating the partioned data-set USERDATA, you may need to shorten the names)
+For efficient reading and modification, I need to use a VSAM data set
+
+
+For filling the data set, I have made two data files: First I made a file with all the data, and some explanations: `alliedships_Example.txt` which contain the same data, with a bit of explanation of the format, with one line per ship. `alliedships.txt` contains the actual data we want to upload, wrapped so there is no more than 80 chars per line because backwards compatibility. You can upload it with this CLI command `zowe zos-files upload file-to-data-set P0registration/data/alliedships.txt "USERNAME.USERDATA(ALLIED)"` (After creating the partioned data-set USERDATA, you may need to shorten the names)
 
 The data in `alliedships.txt` has been read off mainly from [https://www.naval-history.net/xDKWW2-4101-26RNHome.htm](the Naval-history.net project), with ship data verified on the [http://www.dreadnoughtproject.org/tfs/index.php/Main_Page](the dreadnought project Wiki)
 

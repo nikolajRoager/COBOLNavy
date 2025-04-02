@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DockyardApi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8e18ff166b54261cbe8a3772400616f6af119f6d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+68d7d726ab51cc9db7f0f68f92573b399f547e78")]
 [assembly: System.Reflection.AssemblyProductAttribute("DockyardApi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DockyardApi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

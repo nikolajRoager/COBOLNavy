@@ -1,5 +1,6 @@
       *This program surounds any string with quotes and a ','
       * in the process removing leading and trailing spaces
+      * Useful for translating data into JSON
       *-----------------------
        IDENTIFICATION DIVISION.
       *-----------------------

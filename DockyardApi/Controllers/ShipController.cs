@@ -44,7 +44,15 @@ public class ShipController : ControllerBase
     [HttpGet("GetShip/{id}")]
     public async Task<ActionResult<Warship>> GetShip(string id)
     {
-        return Ok();
+        try
+        {
+            var ship = await zosmfApi.getShip(id);
+            return Ok(ship);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
 
     //Add a ship at the end of the list

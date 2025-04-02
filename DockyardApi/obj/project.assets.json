@@ -1176,19 +1176,19 @@
     ]
   },
   "packageFolders": {
-    "/home/nikolaj/.nuget/packages/": {}
+    "C:\\Users\\KOM\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/DockyardApi.csproj",
+      "projectUniqueName": "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
       "projectName": "DockyardApi",
-      "projectPath": "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/DockyardApi.csproj",
-      "packagesPath": "/home/nikolaj/.nuget/packages/",
-      "outputPath": "/home/nikolaj/Cobol/COBOLNavy/DockyardApi/obj/",
+      "projectPath": "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\DockyardApi.csproj",
+      "packagesPath": "C:\\Users\\KOM\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\KOM\\Cobol\\COBOLNavy\\DockyardApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/nikolaj/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\KOM\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net9.0"
@@ -1212,7 +1212,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.200"
     },
     "frameworks": {
       "net9.0": {
@@ -1242,12 +1242,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[9.0.3, 9.0.3]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -1256,7 +1250,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.104/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

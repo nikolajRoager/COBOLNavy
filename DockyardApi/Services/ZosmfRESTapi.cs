@@ -7,6 +7,7 @@ using System.Text.Json;
 using DockyardApi.Models;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 
 namespace DockyardApi.Services.ZosmfRESTapi
 {
@@ -17,6 +18,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
     {
         public Task<IEnumerable<JobDocument>> getJobs ();
         public Task<IEnumerable<Warship>>     getShips();
+        public Task<Warship>                  getShip(string id);
     }
 
     ///<summary>
@@ -29,6 +31,8 @@ namespace DockyardApi.Services.ZosmfRESTapi
         private readonly string zosUsername;
         private readonly string zosmfUrl;
         private readonly string getShipsJCL;
+
+        private readonly string SearchShipRawJCL;
         
         /// <summary>
         /// Path to executable zowe commandline Executable
@@ -78,13 +82,12 @@ namespace DockyardApi.Services.ZosmfRESTapi
             {
                 //Found it, just call it and see if it works
                 zoweCliExe=path;
-                zoweNotFound=zoweCliWorks();
+                zoweNotFound=!zoweCliWorks();
             }
             else
                 zoweNotFound=true;
             if (zoweNotFound)
             {
-                Console.WriteLine($"INFO: Zowe CLI not found in PATH, searching npm install location");
                 if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     //This is where it would go if it was installed through npm
@@ -112,9 +115,23 @@ namespace DockyardApi.Services.ZosmfRESTapi
 
                     zoweCliExe=Path.Combine(Path.Combine(bin_path.Trim(), "bin"),"zowe");
                 }
+
+
+                //We will insert the name on the place of replace, to get a jcl we can submit
+                SearchShipRawJCL=
+                "//FINDSHP JOB (ACCT),'FINDSHP',CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID\n"+
+                "//RUN EXEC PGM=FINDSHP,PARM=REPLACE\n"+
+                "//*Link libraries\n"+
+                "//STEPLIB DD DSN=&SYSUID..LOAD,DISP=SHR\n"+
+                "//*User supplied data: allied ships\n"+
+                "//ALLSHPS   DD DSN=&SYSUID..USERDATA(ALLIED),DISP=SHR\n"+
+                "//SYSOUT    DD SYSOUT=*,OUTLIM=15000\n"+
+                "//CEEDUMP   DD DUMMY\n"+
+                "//SYSUDUMP  DD DUMMY\n"+
+                "//*\n";
             }
             if (!zoweCliWorks())
-                throw new Exception("Zowe CLI could not be found, install it through npm, and add it to your path");
+                throw new Exception($"Zowe CLI could not be found at {zoweCliExe}, install it through npm, and add it to your path");
             Console.WriteLine($"INFO: Found Zowe CLI at {zoweCliExe}");
 
         }
@@ -187,6 +204,73 @@ namespace DockyardApi.Services.ZosmfRESTapi
             return jobList;
         }
 
+        /// <summary>
+        /// Helper class for ship returned by cobol program and/or error message
+        /// </summary>
+        private class returnedShip
+        {
+            [JsonPropertyName("Success")] public int Success {get;set;}
+            [JsonPropertyName("Error")] public string Error {get;set;} =null!;
+            [JsonPropertyName("Ship")] public Warship? Ship {get;set;}
+        }
+
+        /// <summary>
+        /// Post the job to get a single ship
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<Warship> getShip(string ID)
+        {
+            //Post the job using the rest api, this is the better version but is not permitted by Z-Explore
+            //string response = await SubmitJob(getShipsJCL);
+            //Post the job using a ZOWE hack (if the mainframe doesn't support http post)
+            (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(SearchShipRawJCL,ID);
+
+            string status="ACTIVE";
+            //ONLY poll up to 15 times, spaced out over 1 minute
+            for (int i = 0; i < 15; ++i)
+            {
+                //Wait 2 seconds
+                await Task.Delay(4000);
+                //Check status
+                status =await getJobStatus(jobUrl);
+
+                //Some documentation insist that this is also a valid exit code
+                if (status=="ABENDED")
+                {
+                    //Should really not happen in normal usage
+                    throw new Exception("Job exited with mainframe-side COBOL error (status: ABEND)");
+                }
+                else if (status!="ACTIVE" && status!="IDLE" && status!="WAITING")
+                {
+                    break;
+                }
+            }
+
+            if (status!="OUTPUT")
+            {
+                throw new Exception("Job stopped or timed out, with status other than output, status: "+status);
+            }
+            //The job is done, now get the result
+            string output= await getSysout(jobFilesUrl);
+            
+            Console.WriteLine(output);
+
+            
+            var shipResult = JsonSerializer.Deserialize<returnedShip>(output, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (shipResult.Success==0 || shipResult.Ship==null)
+                throw new Exception("Could not get ship: "+shipResult.Error);
+
+
+            return shipResult.Ship;
+        }
+
+
+
         ///<summary>
         ///This does NOT work on Z-Explore mainframe, because users do not have POST permission
         ///I keep it around to demonstrate how it should be done
@@ -224,7 +308,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
             }
             else throw new ArgumentException("failed to submit Z/OS job: "+await response.Content.ReadAsStringAsync());
         }
-
+        
         /// <summary>
         /// A bodge solution to not being allowed to post jobs with http: simply launch zowe cli in the commandline
         /// The function either returns the ID of the job when submitted, or throws an exception if it did not work
@@ -280,6 +364,84 @@ namespace DockyardApi.Services.ZosmfRESTapi
                 {
                     throw new Exception($"Job could not be submitted, zowe cli returned error {JsonOutput.RootElement.GetProperty("message").GetString()}");
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// A bodge solution to post a job with a custom argument, 
+        /// The function either returns the ID of the job when submitted, or throws an exception if it did not work
+        /// Returns direct link to job, anddirect link to files
+        /// I don't have a REST version as I can't debug/test it
+        /// </summary>
+        private (string,string) SubmitZoweJobArg(string rawJCL,string arg)
+        {
+
+            string thisJcl =rawJCL.Replace("REPLACE",$"'{arg}'");
+
+            //Create a temporary file with the raw JCL, this is a unique name, regardless of how many threads have been launched
+            string tempJCLFile= Path.GetTempFileName()+".jcl";
+            Console.WriteLine("INFO: created "+tempJCLFile);
+            try
+            {
+                File.WriteAllText(tempJCLFile,thisJcl);
+            
+                ProcessStartInfo processStartInfo = new ProcessStartInfo
+                {
+                        FileName =  zoweCliExe,
+                        Arguments= $"zos-jobs submit lf {tempJCLFile} --rfj",
+                        RedirectStandardOutput=true,
+                        RedirectStandardError=true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                };
+
+                //Launch the process
+                using (Process process = new Process())
+                {
+                    process.StartInfo=processStartInfo;
+                    
+                    //Launch the process
+                    process.Start();
+
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+
+                    //Async is not available
+                    process.WaitForExit();
+
+                    //This will only happen is the launching of the command fails
+                    if (!string.IsNullOrEmpty(error))
+                    {
+                        throw new Exception($"Error launching Z/OS job with zowe CLI : {error}");
+                    }
+
+
+                    var JsonOutput = System.Text.Json.JsonDocument.Parse(output);
+                    var success = JsonOutput.RootElement.GetProperty("success").GetBoolean();
+                    if (success)
+                    {
+                        var jobUrl =JsonOutput.RootElement.GetProperty("data").GetProperty("url").GetString();
+                        var jobFilesUrl =JsonOutput.RootElement.GetProperty("data").GetProperty("files-url").GetString();
+                        if (jobUrl==null || jobFilesUrl==null)
+                            throw new Exception($"Job was launched but zowe did not return an ID");
+                        else
+                        {
+                            return (jobUrl,jobFilesUrl);
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception($"Job could not be submitted, zowe cli returned error {JsonOutput.RootElement.GetProperty("message").GetString()}");
+                    }
+                }
+            }
+            finally
+            {
+                Console.WriteLine("INFO: delete "+tempJCLFile);
+                //Remove the temp file
+                if (File.Exists(tempJCLFile))
+                    File.Delete(tempJCLFile);
             }
         }
 
