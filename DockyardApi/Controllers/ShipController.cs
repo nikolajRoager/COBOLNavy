@@ -55,7 +55,12 @@ public class ShipController : ControllerBase
         }
     }
 
-    //Add a ship at the end of the list
+    /// <summary>
+    ///Add or modify a ship at the end of the list
+    ///For practical purposes, a museum ship is considered "scrapped"
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpPost("AddShip/{id}")]
     public async Task<ActionResult<Warship>> AddShip(string id)
     {
@@ -63,13 +68,12 @@ public class ShipController : ControllerBase
     }
 
     /// <summary>
-    ///Update status of ship with this id, to that, there is no delete function, instead set status to "sunk" or "scrapped"
-    ///For practical purposes, a museum ship is considered "scrapped"
+    /// Only for demonstration purposes
+    /// Call function to delete entire list and reset everything
     /// </summary>
-    /// <param name="id"></param>
     /// <returns></returns>
-    [HttpGet("UpdateShip/{id}")]
-    public async Task<ActionResult<Warship>> UpdateShip(string id)
+    [HttpDelete("Reset")]
+    public async Task<ActionResult> ResetShips()
     {
         return Ok();
     }

@@ -33,6 +33,8 @@ namespace DockyardApi.Services.ZosmfRESTapi
         private readonly string getShipsJCL;
 
         private readonly string SearchShipRawJCL;
+
+        private readonly string AddShipRawJCL;
         
         /// <summary>
         /// Path to executable zowe commandline Executable
@@ -115,21 +117,31 @@ namespace DockyardApi.Services.ZosmfRESTapi
 
                     zoweCliExe=Path.Combine(Path.Combine(bin_path.Trim(), "bin"),"zowe");
                 }
-
+            }
 
                 //We will insert the name on the place of replace, to get a jcl we can submit
                 SearchShipRawJCL=
-                "//FINDSHP JOB (ACCT),'FINDSHP',CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID\n"+
-                "//RUN EXEC PGM=FINDSHP,PARM=REPLACE\n"+
-                "//*Link libraries\n"+
-                "//STEPLIB DD DSN=&SYSUID..LOAD,DISP=SHR\n"+
-                "//*User supplied data: allied ships\n"+
-                "//ALLSHPS   DD DSN=&SYSUID..USERDATA(ALLIED),DISP=SHR\n"+
-                "//SYSOUT    DD SYSOUT=*,OUTLIM=15000\n"+
-                "//CEEDUMP   DD DUMMY\n"+
-                "//SYSUDUMP  DD DUMMY\n"+
-                "//*\n";
-            }
+                    "//FINDSHP JOB (ACCT),'FINDSHP',CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID\n"+
+                    "//RUN EXEC PGM=FINDSHP,PARM='RNBB0029'                          \n"+
+                    "//*Link libraries                                               \n"+
+                    "//STEPLIB DD DSN=&SYSUID..LOAD,DISP=SHR                         \n"+
+                    "//*User supplied data: allied ships                             \n"+
+                    "//VSAMFILE     DD DSN=&SYSUID..VSAM,DISP=SHR                    \n"+
+                    "//VSAMIN       DD DSN=&SYSUID..VSAM,DISP=SHR                    \n"+
+                    "//SYSOUT    DD SYSOUT=*,OUTLIM=15000                            \n"+
+                    "//CEEDUMP   DD DUMMY                                            \n"+
+                    "//SYSUDUMP  DD DUMMY                                            \n";
+
+
+                AddShipRawJCL=           
+"//STEP2 EXEC PGM=ADDSH"
+"//STEPLIB   DD DSN=&SYSUID..LOAD,DISP=SHR\n"
+"//ALLSHPS   DD DSN=&SYSUID..VSAM,DISP=SHR\n"
+"//SYSOUT    DD SYSOUT=*,OUTLIM=15000\n"
+"//CEEDUMP   DD DUMMY\n"
+"//SYSUDUMP  DD DUMMY\n"
+"//SYSIN     DD *\n";//Paste ship data below here
+
             if (!zoweCliWorks())
                 throw new Exception($"Zowe CLI could not be found at {zoweCliExe}, install it through npm, and add it to your path");
             Console.WriteLine($"INFO: Found Zowe CLI at {zoweCliExe}");
@@ -158,6 +170,18 @@ namespace DockyardApi.Services.ZosmfRESTapi
                 return jobList?.Jobs ?? new List<JobDocument>();
             }
         }
+
+
+        /// <summary>
+        /// Helper class for ships returned by cobol program and/or error message
+        /// </summary>
+        private class returnedShips
+        {
+            [JsonPropertyName("Success")] public int Success {get;set;}
+            [JsonPropertyName("Error")] public string Error {get;set;} =null!;
+            [JsonPropertyName("Ships")] public List<Warship>? Ships {get;set;}
+        }
+
 
         public async Task<IEnumerable<Warship>> getShips()
         {
@@ -195,13 +219,17 @@ namespace DockyardApi.Services.ZosmfRESTapi
             
             Console.WriteLine(shiplist);
 
-            var jobList = JsonSerializer.Deserialize<List<Warship>>(shiplist, new JsonSerializerOptions
+            var jobList = JsonSerializer.Deserialize<returnedShips>(shiplist, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });
 
+            if (jobList.Success==0)
+            {
+                throw new Exception($"Error getting ship-list {jobList.Error}");
+            }
 
-            return jobList;
+            return jobList.Ships;
         }
 
         /// <summary>
