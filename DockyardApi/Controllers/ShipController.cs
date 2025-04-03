@@ -21,7 +21,7 @@ public class ShipController : ControllerBase
     [HttpGet("GetZJobs")]
     public async Task<ActionResult<IEnumerable<JobDocument>>> GetZJobs()
     {
-        var list = await zosmfApi.getJobs();
+        var list = await zosmfApi.GetJobs();
         return Ok(list);
     }
 
@@ -30,7 +30,7 @@ public class ShipController : ControllerBase
     {
         try
         {
-            var list = await zosmfApi.getShips();
+            var list = await zosmfApi.GetShips();
             return Ok(list);
         }
         catch (Exception e)
@@ -46,7 +46,7 @@ public class ShipController : ControllerBase
     {
         try
         {
-            var ship = await zosmfApi.getShip(id);
+            var ship = await zosmfApi.GetShip(id);
             return Ok(ship);
         }
         catch (Exception e)
@@ -59,12 +59,19 @@ public class ShipController : ControllerBase
     ///Add or modify a ship at the end of the list
     ///For practical purposes, a museum ship is considered "scrapped"
     /// </summary>
-    /// <param name="id"></param>
     /// <returns></returns>
-    [HttpPost("AddShip/{id}")]
-    public async Task<ActionResult<Warship>> AddShip(string id)
+    [HttpPost("AddShip")]
+    public async Task<ActionResult<Warship>> AddShip(Warship ship)
     {
-        return Ok();
+        try
+        {
+            await zosmfApi.AddShip(ship);
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
 
     /// <summary>
@@ -75,6 +82,7 @@ public class ShipController : ControllerBase
     [HttpDelete("Reset")]
     public async Task<ActionResult> ResetShips()
     {
+        await zosmfApi.Reset();
         return Ok();
     }
 }

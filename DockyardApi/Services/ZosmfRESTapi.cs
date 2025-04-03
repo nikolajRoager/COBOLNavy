@@ -16,9 +16,11 @@ namespace DockyardApi.Services.ZosmfRESTapi
     ///</summary>
     public interface IZosmfRESTapi
     {
-        public Task<IEnumerable<JobDocument>> getJobs ();
-        public Task<IEnumerable<Warship>>     getShips();
-        public Task<Warship>                  getShip(string id);
+        public Task<IEnumerable<JobDocument>> GetJobs ();
+        public Task<IEnumerable<Warship>>     GetShips();
+        public Task<Warship>                  GetShip(string id);
+        public Task                           AddShip(Warship ship);
+        public Task                           Reset();
     }
 
     ///<summary>
@@ -31,6 +33,8 @@ namespace DockyardApi.Services.ZosmfRESTapi
         private readonly string zosUsername;
         private readonly string zosmfUrl;
         private readonly string getShipsJCL;
+        
+        private readonly string resetJCL;
 
         private readonly string SearchShipRawJCL;
 
@@ -63,6 +67,8 @@ namespace DockyardApi.Services.ZosmfRESTapi
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authInfo);
             
             getShipsJCL=$"{zosUsername}.JCL(GETSHPS)";
+            
+            resetJCL=$"{zosUsername}.JCL(VSAMCRJ)";
             
             zoweCliExe="";//If will be set below, but the compiler doesn't know that and keeps giving me warnings
             //First check if Zowe is in PATH
@@ -134,12 +140,13 @@ namespace DockyardApi.Services.ZosmfRESTapi
 
 
                 AddShipRawJCL=           
-"//STEP2 EXEC PGM=ADDSH"
-"//STEPLIB   DD DSN=&SYSUID..LOAD,DISP=SHR\n"
-"//ALLSHPS   DD DSN=&SYSUID..VSAM,DISP=SHR\n"
-"//SYSOUT    DD SYSOUT=*,OUTLIM=15000\n"
-"//CEEDUMP   DD DUMMY\n"
-"//SYSUDUMP  DD DUMMY\n"
+"//ADDSHJ  JOB 1,NOTIFY=&SYSUID\n"+
+"//STEP2 EXEC PGM=ADDSH\n"+
+"//STEPLIB   DD DSN=&SYSUID..LOAD,DISP=SHR\n"+
+"//ALLSHPS   DD DSN=&SYSUID..VSAM,DISP=SHR\n"+
+"//SYSOUT    DD SYSOUT=*,OUTLIM=15000\n"+
+"//CEEDUMP   DD DUMMY\n"+
+"//SYSUDUMP  DD DUMMY\n"+
 "//SYSIN     DD *\n";//Paste ship data below here
 
             if (!zoweCliWorks())
@@ -149,7 +156,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
         }
 
 
-        public async Task<IEnumerable<JobDocument>> getJobs()
+        public async Task<IEnumerable<JobDocument>> GetJobs()
         {
             HttpResponseMessage response = await client.GetAsync(zosmfUrl+"?owner="+zosUsername);
             if (!response.IsSuccessStatusCode)
@@ -183,7 +190,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
         }
 
 
-        public async Task<IEnumerable<Warship>> getShips()
+        public async Task<IEnumerable<Warship>> GetShips()
         {
             //Post the job using the rest api, this is the better version but is not permitted by Z-Explore
             //string response = await SubmitJob(getShipsJCL);
@@ -223,8 +230,9 @@ namespace DockyardApi.Services.ZosmfRESTapi
             {
                 PropertyNameCaseInsensitive = true
             });
-
-            if (jobList.Success==0)
+            if (jobList==null)
+                throw new Exception($"Error getting ship-list, no output returned");
+            if (jobList.Success==0 || jobList.Ships==null)
             {
                 throw new Exception($"Error getting ship-list {jobList.Error}");
             }
@@ -247,12 +255,13 @@ namespace DockyardApi.Services.ZosmfRESTapi
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public async Task<Warship> getShip(string ID)
+        public async Task<Warship> GetShip(string ID)
         {
             //Post the job using the rest api, this is the better version but is not permitted by Z-Explore
             //string response = await SubmitJob(getShipsJCL);
             //Post the job using a ZOWE hack (if the mainframe doesn't support http post)
-            (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(SearchShipRawJCL,ID);
+
+            (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(SearchShipRawJCL.Replace("REPLACE",$"'{ID}'"));
 
             string status="ACTIVE";
             //ONLY poll up to 15 times, spaced out over 1 minute
@@ -290,6 +299,9 @@ namespace DockyardApi.Services.ZosmfRESTapi
                 PropertyNameCaseInsensitive = true
             });
 
+            if (shipResult==null)
+                throw new Exception("Could not get ship, no return value found");
+
             if (shipResult.Success==0 || shipResult.Ship==null)
                 throw new Exception("Could not get ship: "+shipResult.Error);
 
@@ -297,6 +309,164 @@ namespace DockyardApi.Services.ZosmfRESTapi
             return shipResult.Ship;
         }
 
+        public async Task AddShip(Warship ship)
+        {
+            //Post the job using the rest api, this is the better version but is not permitted by Z-Explore
+            //string response = await SubmitJob(getShipsJCL);
+            //Post the job using a ZOWE hack (if the mainframe doesn't support http post)
+            string AddThisShipRawJCL=AddShipRawJCL+
+ship.Navy+"\n"+
+ship.Type+"\n"+
+ship.Pennant+"\n"+
+ship.Name+"\n"+
+ship.Class+"\n"+
+ship.Status+"\n"+
+ship.Theatre+"\n"+
+ship.Fleet+"\n"+
+ship.Formation+"\n"+
+ship.Captain+"\n"+
+ship.Speed+"\n"+
+ship.BeltArmour+"\n"+
+ship.DeckArmour+"\n"+
+ship.MainGunNr+"\n"+
+ship.MainGunCalibre+"\n"+
+ship.SecondaryGunNr+"\n"+
+ship.SecondaryGunCalibre+"\n"+
+ship.FireControlComputer+"\n"+
+ship.HeavyAAGunNr+"\n"+
+ship.LightAAGunNr+"\n"+
+ship.AAControlCompute+"\n"+
+ship.RadarModel+"\n"+
+ship.SonarModel+"\n"+
+ship.DepthCharges+"\n"+
+ship.Torpedos+"\n"+
+(ship.Aircraft.Count()>0?$"{ship.Aircraft[0].Number}\n{ship.Aircraft[0].Model}\n":"000\nNone\n")+
+(ship.Aircraft.Count()>1?$"{ship.Aircraft[1].Number}\n{ship.Aircraft[1].Model}\n":"000\nNone\n")+
+(ship.Aircraft.Count()>2?$"{ship.Aircraft[2].Number}\n{ship.Aircraft[2].Model}\n":"000\nNone\n");
+
+            //Submit job to add it
+            (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(AddThisShipRawJCL);
+
+            string status="ACTIVE";
+            //ONLY poll up to 15 times, spaced out over 1 minute
+            for (int i = 0; i < 15; ++i)
+            {
+                //Wait 2 seconds
+                await Task.Delay(4000);
+                //Check status
+                status =await getJobStatus(jobUrl);
+
+                //Some documentation insist that this is also a valid exit code
+                if (status=="ABENDED")
+                {
+                    //Should really not happen in normal usage
+                    throw new Exception("Job exited with mainframe-side COBOL error (status: ABEND)");
+                }
+                else if (status!="ACTIVE" && status!="IDLE" && status!="WAITING")
+                {
+                    break;
+                }
+            }
+
+            if (status!="OUTPUT")
+            {
+                throw new Exception("Job stopped or timed out, with status other than output, status: "+status);
+            }
+            //The job is done, now get the result
+            string output= await getSysout(jobFilesUrl);
+            
+            Console.WriteLine(output);
+        }
+
+        public async Task Reset()
+        {
+
+            {//Scope to limit variables like jobUrl etc.
+                //Post the job using a ZOWE hack (if the mainframe doesn't support http post)
+                (string jobUrl,string jobFilesUrl) = SubmitZoweJob(resetJCL);
+                string status="ACTIVE";
+                //ONLY poll up to 15 times, spaced out over 1 minute
+                for (int i = 0; i < 15; ++i)
+                {
+                    //Wait 2 seconds
+                    await Task.Delay(4000);
+                    //Check status
+                    status =await getJobStatus(jobUrl);
+
+                    //Some documentation insist that this is also a valid exit code
+                    if (status=="ABENDED")
+                    {
+                        //Should really not happen in normal usage
+                        throw new Exception("Job exited with mainframe-side COBOL error (status: ABEND)");
+                    }
+                    else if (status!="ACTIVE" && status!="IDLE" && status!="WAITING")
+                    {
+                        break;
+                    }
+                }
+
+                if (status!="OUTPUT")
+                {
+                    throw new Exception("Job stopped or timed out, with status other than output, status: "+status);
+                }
+                //No sysout from reset, but if it didn't abbend, now we can loop through the ships and add them
+                }
+
+            //Just a big dum list of ships
+            string inputShipPath = "ships.txt";
+            IEnumerable<string> lines = File.ReadLines(inputShipPath);
+            int batchSize = 31;
+            int counter = 0;
+
+            List<string> batch = new List<string>();
+            foreach (string line in lines)
+            {
+                batch.Add(line);
+                counter++;
+
+                if (counter == batchSize)
+                {
+                    string AddThisShipRawJCL=AddShipRawJCL+String.Join("\n",batch);
+                    Console.WriteLine("ADD"+AddThisShipRawJCL);
+                    
+            //Submit job to add it
+            (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(AddThisShipRawJCL);
+
+            string status="ACTIVE";
+            //ONLY poll up to 15 times, spaced out over 1 minute
+            for (int i = 0; i < 15; ++i)
+            {
+                //Wait 2 seconds
+                await Task.Delay(4000);
+                //Check status
+                status =await getJobStatus(jobUrl);
+
+                //Some documentation insist that this is also a valid exit code
+                if (status=="ABENDED")
+                {
+                    //Should really not happen in normal usage
+                    throw new Exception("Job exited with mainframe-side COBOL error (status: ABEND)");
+                }
+                else if (status!="ACTIVE" && status!="IDLE" && status!="WAITING")
+                {
+                    break;
+                }
+            }
+
+            if (status!="OUTPUT")
+            {
+                throw new Exception("Job stopped or timed out, with status other than output, status: "+status);
+            }
+            //The job is done, now get the result
+            string output= await getSysout(jobFilesUrl);
+            
+            Console.WriteLine(output);
+                    batch.Clear();
+                    counter = 0;
+                }
+            }
+
+        }
 
 
         ///<summary>
@@ -399,14 +569,11 @@ namespace DockyardApi.Services.ZosmfRESTapi
         /// <summary>
         /// A bodge solution to post a job with a custom argument, 
         /// The function either returns the ID of the job when submitted, or throws an exception if it did not work
-        /// Returns direct link to job, anddirect link to files
+        /// Returns direct link to job, and direct link to files
         /// I don't have a REST version as I can't debug/test it
         /// </summary>
-        private (string,string) SubmitZoweJobArg(string rawJCL,string arg)
+        private (string,string) SubmitZoweJobArg(string thisJcl)
         {
-
-            string thisJcl =rawJCL.Replace("REPLACE",$"'{arg}'");
-
             //Create a temporary file with the raw JCL, this is a unique name, regardless of how many threads have been launched
             string tempJCLFile= Path.GetTempFileName()+".jcl";
             Console.WriteLine("INFO: created "+tempJCLFile);
