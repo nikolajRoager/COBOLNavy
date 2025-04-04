@@ -79,10 +79,11 @@ public class ShipController : ControllerBase
     /// Call function to delete entire list and reset everything
     /// </summary>
     /// <returns></returns>
+    /*IBM explicitly told me NOT TO DO THIS AGAIN, turns out it is some kind of impromptu DOS attack
     [HttpDelete("Reset")]
     public async Task<ActionResult> ResetShips()
     {
         await zosmfApi.Reset();
         return Ok();
-    }
+    }*/
 }

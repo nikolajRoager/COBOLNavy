@@ -8,6 +8,8 @@ using DockyardApi.Models;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 
 namespace DockyardApi.Services.ZosmfRESTapi
 {
@@ -128,7 +130,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
                 //We will insert the name on the place of replace, to get a jcl we can submit
                 SearchShipRawJCL=
                     "//FINDSHP JOB (ACCT),'FINDSHP',CLASS=A,MSGCLASS=A,NOTIFY=&SYSUID\n"+
-                    "//RUN EXEC PGM=FINDSHP,PARM='RNBB0029'                          \n"+
+                    "//RUN EXEC PGM=FINDSHP,PARM='REPLACE'                          \n"+
                     "//*Link libraries                                               \n"+
                     "//STEPLIB DD DSN=&SYSUID..LOAD,DISP=SHR                         \n"+
                     "//*User supplied data: allied ships                             \n"+
@@ -224,6 +226,13 @@ namespace DockyardApi.Services.ZosmfRESTapi
             //The job is done, now get the result
             string shiplist = await getSysout(jobFilesUrl);
             
+            //Regular expression to remove leading zeros from decimal, AI generated Regex of course
+            string pattern = @"(?<=:\s*)(0+)(\d+(\.\d+)?)";
+            //Replace leading zeros with the number itself
+            shiplist = Regex.Replace(shiplist, pattern, m => m.Groups[2].Value);
+            
+            
+            File.WriteAllText("shiplist.txt",shiplist);
             Console.WriteLine(shiplist);
 
             var jobList = JsonSerializer.Deserialize<returnedShips>(shiplist, new JsonSerializerOptions
@@ -260,8 +269,8 @@ namespace DockyardApi.Services.ZosmfRESTapi
             //Post the job using the rest api, this is the better version but is not permitted by Z-Explore
             //string response = await SubmitJob(getShipsJCL);
             //Post the job using a ZOWE hack (if the mainframe doesn't support http post)
-
-            (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(SearchShipRawJCL.Replace("REPLACE",$"'{ID}'"));
+            Console.WriteLine(SearchShipRawJCL.Replace("REPLACE",$"{ID}"));
+            (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(SearchShipRawJCL.Replace("REPLACE",$"{ID}"));
 
             string status="ACTIVE";
             //ONLY poll up to 15 times, spaced out over 1 minute
@@ -293,6 +302,9 @@ namespace DockyardApi.Services.ZosmfRESTapi
             
             Console.WriteLine(output);
 
+            string pattern = @"(?<=:\s*)(0+)(\d+(\.\d+)?)";
+            //Replace leading zeros with the number itself
+            output = Regex.Replace(output, pattern, m => m.Groups[2].Value);
             
             var shipResult = JsonSerializer.Deserialize<returnedShip>(output, new JsonSerializerOptions
             {
