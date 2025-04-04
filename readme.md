@@ -2,50 +2,66 @@ COBOL Navy, a training exercise
 ===========================
 This is a training Exercise in COBOL, JCL, the z/OS mainframe.
 
-This project includes a number of smaller projects, of increasing complexity, covering different learning goals.
-
-All the smaller projects are themed around the Battle for the Atlantic during WW2.
-
 The program is intended to run on IBM's Z-explorer free mainframe (free as in free of cost, not as in open source) [https://www.ibm.com/z/resources/zxplore](IBM Z-Explorer). You will need to register a free account and upload the files for each project to your user. Please refer to [https://github.com/openmainframeproject/cobol-programming-course/releases](the Open Mainframe Projects introduction to COBOL) for instructions on how to do that.
 
 This project is purely educational, and does therefore comply with the terms of use for Z-Explorer.
 
 
-Projects
+Project: Royal Navy Registration
 =======
 
-Ship Listing
+Learning goals
 ----------------------
 
-Learning goals:
+* Upload data to the z/OS mainframe, to a VSAM data set.
+* Efficiently find, add, and modify data on z/OS based on some unique id.
+* Read and write data to the same file using different COBOL programs, verify that the data is uploaded correctly.
+* Use COBOL intrinsic functions to cast strings to numbers (`NUMVAL`) correctly.
+* Use user defined functions to simplify the Cobol programs, and link and compile them together.
+* Use the IBM Z/OS Mainframe Rest Api to read jobs and result from the mainframe from C\#.
+* Submit jobs from C\#, including custom arguments (using Rest API or other means).
 
-* Upload data to the z/OS mainframe, preferably to a VSAM data set
-* Efficiently find, add, and modify data on z/OS based on some unique id
-* Read and write data to this file using different COBOL programs, verify that the data is uploaded correctly.
-* Use COBOL intrinsic functions to cast strings to numbers (`NUMVAL`)
-* Use at least one custom function, defined in a seperate file (in my case, a function which surrounds a string with quotes, and trims to content).
-* Link and compile multiple functions together
-* Use COBOL to print data in JSON (so a web-browser can present it)
+Scenario
+----------
 
-Scenario:
+*We need to keep track of allied warships available for Convoy Escort in the Atlantic ocean, we need to be able to upload ships, modify the status and properties of the ships: including pennant number; name; stats relevant for escorting such as cruise-speed, number and size of guns, number of depth-charges, number of torpedoes, radar, sonar, and aircrafts, and data about the current status like: captain name and rank, current area, what formation they are part of, and current status*
 
-*We need to keep track of allied warships available for Convoy Escort in the Atlantic ocean, we need one program which can add or update ships in a file `DATA.ALLIEDSHIPS` (from the JCL file), this file simply contains identifying information for each ship, like a unique identifier made from its navy, type, and pennant number; its name; and stats  relevant for escorting such as cruise-speed, number and size of guns, number of depth-charges, number of torpedoes, crew, radar, sonar, and aircrafts, and data about the current status like: commander name and rank, current area, what formation they are part of, and current status*
-
-Solution and product:
-
-For efficient reading and modification, I need to use a VSAM data set
+Solution, product, and problems
+---------------------
+The stored data will be stored in a key-sequenced VSAM dataset (Virtual Storage Access Method dataset), this allows me to quickly find entries based on a key, at least compared to storing everything in a big file. The VSAM file is defined by submitting this JCL job:
 
 
-For filling the data set, I have made two data files: First I made a file with all the data, and some explanations: `alliedships_Example.txt` which contain the same data, with a bit of explanation of the format, with one line per ship. `alliedships.txt` contains the actual data we want to upload, wrapped so there is no more than 80 chars per line because backwards compatibility. You can upload it with this CLI command `zowe zos-files upload file-to-data-set P0registration/data/alliedships.txt "USERNAME.USERDATA(ALLIED)"` (After creating the partioned data-set USERDATA, you may need to shorten the names)
+    //VSMCRJ JOB 1,NOTIFY=&SYSUID
+    //***************************************************/
+    //STEP1    EXEC PGM=IDCAMS
+    //SYSPRINT   DD SYSOUT=*
+    //SYSIN      DD *
+    DELETE Z67124.VSAM
+    SET MAXCC=0
+    DEFINE CLUSTER(     -
+        NAME(Z67124.VSAM) -
+        TRACKS(30)        -
+        RECSZ(500 500)    -
+        INDEXED           -
+        KEYS(12 0)        -
+        CISZ(2048))
 
-The data in `alliedships.txt` has been read off mainly from [https://www.naval-history.net/xDKWW2-4101-26RNHome.htm](the Naval-history.net project), with ship data verified on the [http://www.dreadnoughtproject.org/tfs/index.php/Main_Page](the dreadnought project Wiki)
 
-WARNING, I do NOT guarantee that some errors haven't made their way into my data-set!
+This creates a VSAM file with exactly 500 characters, and 12 character key. In my case the key will have 4 letters for identifying the navy (RN for Royal Navy, MN for Marine National, and USN for United States (of America's) Navy), 4 letters for identifying the ship type (Using the American Hull Classification letter, with for examble BB for battleship, CV for non-nuclear fleet Carrier), and 4 digit pennant or hull number. For examble, the British battleship HMS Rodney is RNBB0029, The US carrier USS Enterprise is USNCV0006.
 
-The first COBOL program I have made, LSSHP.cbl, lists ships in the file.
+To view a ship in the list, I have made a `JSONSHIP.CBL` program, which takes the 500 character data from a ship, and prints it in JSON format (which a C\#, Java, or Javascript program can then parse) to the standard SYSOUT.
 
-It merely loops through the file, and prints the data out as a json list of ships.
+`JSONSHIP` takes an argument in its linkage section, so it can be linked and called by another program, for isntance `GETSHPS.CBL` or `FINDSHP.CBL`, the first prints all ships in a JSON list, the other takes a single `PARM` which can be set in the JCL job, and which includes the ship ID to search for.
 
-To do that, I had to make a function which can put quotation marks around string names, after trimming excess spaces. This function has been placed in the file MKQUOTE.cbl, uploaded as MKQUOTE to Z/OS.
+It is possible to view the result using the REST Api, my C\# program does this: Given the Job ID, I wait for the status to beome `OUTPUT`, then I Locate the address of the SYSOUT file, download it, and parse it as JSON.
 
-These two files need to be compiled and linked, this is done with the file LSSHPJ.jcl
+Launching a job from C\# should also be done using the Rest API, but IBM Z Xplore does not allow this, for this reason I launch the Zowe CLI Process from C\#. This allows me to either submit a JCL on the mainframe (like `GETSHPS.JCL`), or submit a custom JCL (Like requesting `FINDSHP` with custom parameter), doing so returns the job ID, which I can use to get the output
+
+
+To fill the data-set, I have created a program `ADDSH.CBL` which prompts the user for all input, and either adds the ship to the dataset, or modifies an existing entry.
+
+By redirecting SYSOUT in the JCL job file, I can automatically provide all the entries from a custom JCL file.
+
+In principle, I have made a C# program which can upload a database from [https://www.naval-history.net/xDKWW2-4101-26RNHome.htm](the Naval-history.net project), with ship data verified on the [http://www.dreadnoughtproject.org/tfs/index.php/Main_Page](the dreadnought project Wiki) from the Royal Navy on the 1st of January 1941
+
+However I did not upload all the data, because I made too many requests and got temporarily suspended.
