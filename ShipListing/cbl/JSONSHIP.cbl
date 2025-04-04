@@ -115,7 +115,7 @@
            CALL 'MKQUOTE' USING WS-NAME , STRING-LEN RETURNING BUFFER.
            DISPLAY '    "Name":' BUFFER .
            MOVE WS-IDNR TO WS-FORMAT-INTEGER.
-           DISPLAY '    "Pennant-nr":' WS-FORMAT-INTEGER ','.
+           DISPLAY '    "Pennant-nr":' WS-IDNR WS-FORMAT-INTEGER ','.
            MOVE 20 TO STRING-LEN.
            CALL 'MKQUOTE' USING WS-CLASS , STRING-LEN RETURNING BUFFER.
            DISPLAY '    "Class":' BUFFER .

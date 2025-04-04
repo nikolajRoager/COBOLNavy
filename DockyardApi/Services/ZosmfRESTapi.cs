@@ -323,9 +323,7 @@ namespace DockyardApi.Services.ZosmfRESTapi
 
         public async Task AddShip(Warship ship)
         {
-            //Post the job using the rest api, this is the better version but is not permitted by Z-Explore
-            //string response = await SubmitJob(getShipsJCL);
-            //Post the job using a ZOWE hack (if the mainframe doesn't support http post)
+            //This is the jcl to post this ship
             string AddThisShipRawJCL=AddShipRawJCL+
 ship.Navy+"\n"+
 ship.Type+"\n"+
@@ -356,6 +354,9 @@ ship.Torpedos+"\n"+
 (ship.Aircraft.Count()>1?$"{ship.Aircraft[1].Number}\n{ship.Aircraft[1].Model}\n":"000\nNone\n")+
 (ship.Aircraft.Count()>2?$"{ship.Aircraft[2].Number}\n{ship.Aircraft[2].Model}\n":"000\nNone\n");
 
+            //Post the job using the rest api, this is the better version but is not permitted by Z-Explore
+            //string response = await SubmitJob(getShipsJCL);
+            //Post the job using a ZOWE hack (if the mainframe doesn't support http post)
             //Submit job to add it
             (string jobUrl,string jobFilesUrl) = SubmitZoweJobArg(AddThisShipRawJCL);
 

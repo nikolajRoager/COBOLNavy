@@ -1,4 +1,3 @@
-
 //FINDSHPC JOB 1,NOTIFY=&SYSUID
 //***************************************************/
 //STEP1 EXEC IGYWCL
